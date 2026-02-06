@@ -27,9 +27,12 @@ const BASE_PATH = config.BASE_PATH;
 // Without this, secure cookies are silently dropped behind the proxy
 app.set("trust proxy", 1);
 
-// CORS Configuration - Explicit origin for production
+// CORS Configuration - Explicit origin matching deployed frontend
 const corsOptions = {
-  origin: config.FRONTEND_ORIGIN || "http://localhost:5173",
+  origin:
+    config.NODE_ENV === "production"
+      ? "https://monkey-1-0xok.onrender.com"
+      : "http://localhost:5173",
   credentials: true,
 };
 
