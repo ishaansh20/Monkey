@@ -3,7 +3,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
 export default defineConfig({
-  base: "/project-management/",
+  base: "/", // Root path for Render deployment
   plugins: [react()],
   resolve: {
     alias: {

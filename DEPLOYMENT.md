@@ -86,7 +86,15 @@ FRONTEND_GOOGLE_CALLBACK_URL=https://monkey-frontend.onrender.com/auth/google (o
 ### D. Test Backend
 
 Visit: `https://monkey-backend.onrender.com/`
-Should see: "working..."
+Should see JSON response:
+
+```json
+{
+  "message": "Monkey API Running",
+  "status": "healthy",
+  "version": "1.0.0"
+}
+```
 
 ---
 
@@ -175,6 +183,20 @@ After frontend deployment, update backend environment variable:
 - Check browser console for errors
 - Verify build succeeded in Render logs
 
+**Problem:** White screen + MIME type errors / 404 for assets
+
+- Ensure `vite.config.js` has `base: "/"` (not `/project-management/`)
+- Verify `_redirects` file exists in `public/` folder with content: `/*    /index.html   200`
+- Clear browser cache and hard refresh (Ctrl+Shift+R)
+- Check Render logs for successful build
+- Verify Publish Directory is set to `dist` (not `build`)
+
+**Problem:** React Router not working on direct URLs or refresh
+
+- Ensure `_redirects` file exists in `public/` folder
+- Content should be: `/*    /index.html   200`
+- This file tells Render to redirect all routes to index.html for client-side routing
+
 ### Database Issues
 
 **Problem:** Can't connect to MongoDB
@@ -193,6 +215,13 @@ After frontend deployment, update backend environment variable:
 - ✅ .env files are in .gitignore
 - ✅ Only .env.example files are committed
 - ✅ Update FRONTEND_ORIGIN after deployment
+
+## ⚙️ Build Configuration Checklist
+
+- ✅ `vite.config.js` has `base: "/"` for Render
+- ✅ `_redirects` file in `public/` folder for SPA routing
+- ✅ `package.json` has correct build script: `vite build`
+- ✅ Publish directory is `dist` (Vite default output)
 
 ---
 
