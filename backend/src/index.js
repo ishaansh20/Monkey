@@ -23,11 +23,7 @@ const autoSeedRoles = require("./utils/auto-seed-roles");
 const app = express();
 const BASE_PATH = config.BASE_PATH;
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-app.use(passport.initialize());
-
+// ⚠️ CRITICAL: CORS MUST BE FIRST - before all other middleware
 // CORS Configuration - Support multiple origins
 const allowedOrigins = [
   "http://localhost:5173",
@@ -35,42 +31,34 @@ const allowedOrigins = [
   config.FRONTEND_ORIGIN, // Production frontend URL from env
 ].filter(Boolean); // Remove any undefined values
 
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      // Allow requests with no origin (mobile apps, Postman, etc.)
-      if (!origin) return callback(null, true);
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (mobile apps, Postman, etc.)
+    if (!origin) return callback(null, true);
 
-      if (allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    maxAge: 86400, // 24 hours - cache preflight responses
-  }),
-);
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  maxAge: 86400, // 24 hours - cache preflight responses
+};
 
-// Explicitly handle preflight requests for all routes
-app.options(
-  "*",
-  cors({
-    origin: function (origin, callback) {
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  }),
-);
+// Apply CORS to all routes
+app.use(cors(corsOptions));
+
+// Explicitly handle preflight (OPTIONS) requests BEFORE body parser and routes
+app.options("*", cors(corsOptions));
+
+// Body parsers - AFTER CORS
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.use(passport.initialize());
 
 app.get("/", (req, res) => {
   res.status(HTTPSTATUS.OK).json({
