@@ -35,17 +35,13 @@ app.use(
   }),
 );
 
-app.get(
-  "/",
-  asyncHandler(async (req, res, next) => {
-    res.send("working...");
-    throw new BadRequestException(
-      "This is a bad request",
-      ErrorCodeEnum.AUTH_INVALID_TOKEN,
-    );
-    return res.status(HTTPSTATUS.OK).json({ message: "Backend Running" });
-  }),
-);
+app.get("/", (req, res) => {
+  res.status(HTTPSTATUS.OK).json({
+    message: "Monkey API Running",
+    status: "healthy",
+    version: "1.0.0",
+  });
+});
 
 app.use(`${BASE_PATH}/auth`, authRoutes);
 app.use(`${BASE_PATH}/user`, passportAuthenticationJWT, userRoutes);

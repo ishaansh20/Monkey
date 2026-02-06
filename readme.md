@@ -92,9 +92,35 @@ All backend routes are listed in the main project documentation or docs/api.md (
 
 ---
 
-## 📞 Contact
+## � Deployment
+
+**Deploy to Render (Recommended)**
+
+See the complete step-by-step guide: [DEPLOYMENT.md](DEPLOYMENT.md)
+
+Quick links:
+
+- [Render Platform](https://render.com)
+- [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
+
+### Environment Variables Required
+
+**Backend:**
+
+- `MONGO_URI` - MongoDB connection string
+- `JWT_SECRET` - Secret for JWT tokens
+- `SESSION_SECRET` - Session secret key
+- `FRONTEND_ORIGIN` - Frontend URL for CORS
+- `PORT` - Server port (default: 8000)
+
+**Frontend:**
+
+- `VITE_API_BASE_URL` - Backend API URL
+
+---
+
+## �📞 Contact
 
 Author: Roshan prajapati
 
 LinkedIn: [roshan_prajapati](https://www.linkedin.com/in/roshanprajapati/)
-
