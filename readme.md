@@ -4,12 +4,6 @@ Monkey is a powerful, scalable multi-tenancy project management platform built f
 
 ---
 
-## 🚀 Demo
-
-> Live Link [Monkey - Project management](https://prajapatiroshan.github.io/project-management)
-
----
-
 ## 📌 Project Highlights
 
 - 🔐 Google & Email Authentication
@@ -92,6 +86,7 @@ All backend routes are listed in the main project documentation or docs/api.md (
 
 ---
 
+<<<<<<< HEAD
 ## � Deployment
 
 **Deploy to Render (Recommended)**
@@ -124,3 +119,5 @@ Quick links:
 Author: Roshan prajapati
 
 LinkedIn: [roshan_prajapati](https://www.linkedin.com/in/roshanprajapati/)
+=======
+>>>>>>> b2703332e5001c958ffe8ed22e7712bc7b9f5c14
