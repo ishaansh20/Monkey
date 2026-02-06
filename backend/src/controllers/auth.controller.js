@@ -16,6 +16,15 @@ const googleLoginCallback = asyncHandler(async (req, res) => {
     );
   }
 
+  // Set secure HTTP-only cookie with JWT token
+  res.cookie("token", jwt, {
+    httpOnly: true,
+    secure: config.NODE_ENV === "production", // true on HTTPS, false on localhost
+    sameSite: config.NODE_ENV === "production" ? "none" : "lax", // "none" for cross-origin HTTPS, "lax" for localhost
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    path: "/",
+  });
+
   return res.redirect(
     `${config.FRONTEND_GOOGLE_CALLBACK_URL}?status=success&access_token=${jwt}&current_workspace=${currentWorkspace}`,
   );
@@ -45,6 +54,15 @@ const loginController = asyncHandler(async (req, res, next) => {
 
     const access_token = signJwtToken({ userId: user._id });
 
+    // Set secure HTTP-only cookie with JWT token for production HTTPS
+    res.cookie("token", access_token, {
+      httpOnly: true,
+      secure: config.NODE_ENV === "production", // true on HTTPS, false on localhost
+      sameSite: config.NODE_ENV === "production" ? "none" : "lax", // "none" for cross-origin HTTPS, "lax" for localhost
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      path: "/",
+    });
+
     return res.status(HTTPSTATUS.OK).json({
       message: "Logged in successfully",
       access_token,
@@ -54,6 +72,14 @@ const loginController = asyncHandler(async (req, res, next) => {
 });
 
 const logOutController = asyncHandler(async (req, res) => {
+  // Clear the token cookie
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: config.NODE_ENV === "production",
+    sameSite: config.NODE_ENV === "production" ? "none" : "lax",
+    path: "/",
+  });
+
   req.logout((err) => {
     if (err) {
       console.error("Logout error: ", err);
